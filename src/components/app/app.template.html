@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="columns">
+    <div class="column col-6">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="column col-8">
+            <input class="form-input" s:id="apiKey" placeholder="API key" bind:value="model.apiKey" />
+          </div>
+          <div class="column col-4">
+            <button class="btn" click="saveKey">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column col-6">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="column col-8">
+            <input class="form-input" s:id="tickerName" placeholder="ticker" />
+          </div>
+          <div class="column col-4">
+            <button class="btn" click="addTicker">Add Ticker</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <ul>
+    <li s:repeat="model.tickers">{{data.ticker}} - {{data.name}}</li>
+  </ul>
+</div>
