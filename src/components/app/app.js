@@ -5,6 +5,8 @@ import 'slim-js/directives/all.js';
 
 import 'chart.js'
 
+import { produce } from "immer";
+
 import { load, save } from "../../storage";
 import { fetchTicker, fetchRatios } from "../../simfin";
 
@@ -15,18 +17,21 @@ import APP_TEMPLATE from './app.template.html';
 @useShadow(true)
 class MyApp extends Slim {
   onBeforeCreated() {
-    this.ratios = [];
     this.model = load();
+    this.fetchRatiosAndDrawChart();
+  }
+
+  fetchRatiosAndDrawChart() {
     Promise.all(this.model.tickers.map(ticker => {
       return fetchRatios(this.model.apiKey, ticker.simId).then(ratios => {
         return Object.assign({}, ticker, ratios);
       });
-    })).then(ratios => this.ratios = ratios).then(() => this.drawChart());
+    })).then(ratios => this.drawChart(ratios));
   }
 
-  drawChart() {
+  drawChart(ratios) {
     const ctx = this.myChart.getContext('2d');
-    const chartData = ratiosToChart(this.ratios);
+    const chartData = ratiosToChart(ratios);
     const chart = new Chart(ctx, {
         type: 'bubble',
 
@@ -42,8 +47,9 @@ class MyApp extends Slim {
     apiKey.value = apiKey.value.trim();
     const { value: text } = apiKey;
     if (text) {
-      // this.callAttribute('on-new-item', text)
-      this.model.apiKey = text;
+      this.model = produce(this.model, draft => {
+        draft.apiKey = text;
+      });
       save(this.model);
     }
   }
@@ -56,10 +62,12 @@ class MyApp extends Slim {
     if (text) {
       fetchTicker(this.model.apiKey, text).then(ticker => {
         if (ticker) {
-          this.model.tickers.push(ticker);
-          this.model = Object.assign({}, this.model);
+          this.model = produce(this.model, draft => {
+            draft.tickers.push(ticker);
+          });
           save(this.model);
           tickerName.value = null;
+          this.fetchRatiosAndDrawChart();
         } else {
           console.log('Failed to fetch ticker data.');
         }
@@ -68,7 +76,11 @@ class MyApp extends Slim {
   }
 
   removeTicker(ticker) {
-    this.model.tickers = this.model.tickers.filter(existingTicker => existingTicker.ticker !== ticker);
+    this.model = produce(this.model, draft => {
+      draft.tickers = this.model.tickers.filter(existingTicker => existingTicker.ticker !== ticker);
+    });
+    save(this.model);
+    this.fetchRatiosAndDrawChart();
   }
 }
 
