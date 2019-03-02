@@ -37,7 +37,24 @@ class MyApp extends Slim {
 
         data: chartData,
 
-        options: {}
+        options: {
+          scales: {
+            xAxes: [{
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'EV/EBITDA'
+              }
+            }],
+            yAxes: [{
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Debt/EBITDA'
+              }
+            }]
+          }
+        }
     });
   }
 
