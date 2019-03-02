@@ -66,6 +66,10 @@ class MyApp extends Slim {
       });
     }
   }
+
+  removeTicker(ticker) {
+    this.model.tickers = this.model.tickers.filter(existingTicker => existingTicker.ticker !== ticker);
+  }
 }
 
 /**

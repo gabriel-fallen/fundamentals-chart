@@ -1,5 +1,12 @@
 <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
 
+<style>
+  ul {
+    list-style-type: none;
+    display: flex;
+  }
+</style>
+
 <div class="container">
   <div class="columns">
     <div class="column col-6">
@@ -32,7 +39,7 @@
   </div>
 
   <ul>
-    <li s:repeat="model.tickers">{{data.ticker}} - {{data.name}}</li>
+    <my-ticker s:repeat="model.tickers" on-remove="removeTicker"></my-ticker>
   </ul>
 
   <canvas s:id="myChart" width="800" height="600"></canvas>
