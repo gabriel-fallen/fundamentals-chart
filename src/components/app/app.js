@@ -12,7 +12,7 @@ import APP_TEMPLATE from './app.template.html';
 
 @tag('my-app')
 @template(`${APP_TEMPLATE}`)
-// @useShadow(true)
+@useShadow(true)
 class MyApp extends Slim {
   onBeforeCreated() {
     this.ratios = [];

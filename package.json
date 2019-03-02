@@ -38,7 +38,6 @@
   },
   "dependencies": {
     "chart.js": "^2.7.3",
-    "slim-js": "^4.0.5",
-    "spectre.css": "^0.5.8"
+    "slim-js": "^4.0.5"
   }
 }
