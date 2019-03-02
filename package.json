@@ -10,6 +10,10 @@
   },
   "author": "Alexander Tchitchigin",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabriel-fallen/fundamentals-chart"
+  },
   "devDependencies": {
     "@babel/core": "^7.3.3",
     "@babel/plugin-proposal-class-properties": "^7.3.3",
