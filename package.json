@@ -14,6 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/gabriel-fallen/fundamentals-chart"
   },
+  "homepage": "https://fundamentals-chart.5apps.com/",
   "devDependencies": {
     "@babel/core": "^7.3.3",
     "@babel/plugin-proposal-class-properties": "^7.3.3",
