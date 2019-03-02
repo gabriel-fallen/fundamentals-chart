@@ -3,6 +3,8 @@ import { tag, template, useShadow } from 'slim-js/Decorators';
 
 import 'slim-js/directives/all.js';
 
+import 'chart.js'
+
 import { load, save } from "../../storage";
 import { fetchTicker, fetchRatios } from "../../simfin";
 
@@ -19,7 +21,19 @@ class MyApp extends Slim {
       return fetchRatios(this.model.apiKey, ticker.simId).then(ratios => {
         return Object.assign({}, ticker, ratios);
       });
-    })).then(ratios => this.ratios = ratios);
+    })).then(ratios => this.ratios = ratios).then(() => this.drawChart());
+  }
+
+  drawChart() {
+    const ctx = this.myChart.getContext('2d');
+    const chartData = ratiosToChart(this.ratios);
+    const chart = new Chart(ctx, {
+        type: 'bubble',
+
+        data: chartData,
+
+        options: {}
+    });
   }
 
   saveKey(e) {
@@ -52,4 +66,37 @@ class MyApp extends Slim {
       });
     }
   }
+}
+
+/**
+ * Transforms ratios data into bubble chart data.
+ * @param {Array} ratios
+ */
+function ratiosToChart(ratios) {
+  return {
+    // labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: ratiosToDatasets(ratios)
+  };
+}
+
+function ratiosToDatasets(ratios) {
+  const maxCap = ratios.reduce((max, {marketCap}) => Math.max(max, marketCap), 0);
+  const data = ratios.map(ratioToData).map(({x, y, r}) => ({x, y, r: (r / maxCap * 100)}));
+  return ratios.map((ratio, index) =>{
+    const h = 360/data.length * index;
+    return ({
+      label: ratio.name,
+      backgroundColor: `hsla(${h},100%,50%,1)`,
+      borderColor: `hsla(${h},100%,50%,1)`,
+      data: [data[index]],
+    });
+  });
+}
+
+function ratioToData({debt, ev, ebitda, marketCap}) {
+  return {
+    x: ev / ebitda,
+    y: debt / ebitda,
+    r: marketCap
+  };
 }

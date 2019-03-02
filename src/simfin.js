@@ -68,13 +68,13 @@ export function fetchRatios(apiKey, companyId) {
 function parseRatio(ratio) {
   switch (ratio.indicatorId) {
     case "4-6":
-      return { debt: ratio.value };
+      return { debt: Number.parseInt(ratio.value) };
     case "4-10":
-      return { ebitda: ratio.value };
+      return { ebitda: Number.parseInt(ratio.value) };
     case "4-11":
-      return { marketCap: ratio.value };
+      return { marketCap: Number.parseInt(ratio.value) };
     case "4-20":
-      return { ev: ratio.value };
+      return { ev: Number.parseInt(ratio.value) };
   }
 }
 
